@@ -6,7 +6,6 @@
 # github.com/MarioAlvesCarvalho/veianewpdv #
 ############################################
 
-
 #Variaveis de Versao e idioma
 export VERSION_VN="v6.0"
 #export VERSION_VN="v6.0_BETA"
