@@ -1,14 +1,16 @@
 #!/bin/bash
-#########################################
-#########################################
-###          SCRIPT veianew_PDV       ###
-###          DATE 17/01/2020          ###
-#########################################
-#Variaveis de Versao e idioma
-export VERSION_VN="v3.0.0"
-#export VERSION_VN="v3.0.1_BETA"
-export LANG=pt_BRR
+############################################
+############################################
+#             SCRIPT VEIANEWPDV            #
+#            18/11/2020 - 20323            #
+# github.com/MarioAlvesCarvalho/veianewpdv #
+############################################
 
+
+#Variaveis de Versao e idioma
+export VERSION_VN="v6.0"
+#export VERSION_VN="v6.0_BETA"
+export LANG=pt_BR
 
 #Variavel de Cores
 export Cor_Preto="\033[0m"
@@ -17,139 +19,132 @@ export Cor_VerdeClaro="\033[1;32m"
 export Cor_Amarelo="\033[1;33m"
 export Cor_Fundo_Cinza="\033[47;1;37m"
 
-#Variaveis de diretorio root e veianew.ini
-export dirRoot="/bin"
-export veianewIni="${dirRoot}/veianew.ini"
-
 #Variaveis de caminho de diretorios
-export O1S="/tmp/0.15"
-export moduloPHPPDV="/Zanthus/Zeus/path_comum/moduloPHPPDV"
-export Scripts_veianew="/tmp/0.15/Scripts_veianew"
-export Path_Comum="/Zanthus/Zeus/path_comum"
-
+export VEIANEW="${APACHE2}/VEIANEW" ##alterar para /usr/local/VEIANEW --export VEIANEW=/usr/local/VEIANEW"
+export PATH_COMUM="/Zanthus/Zeus/path_comum"
+export APACHE2="/usr/local/apache22"
+export HTDOCS="${APACHE2}/htdocs"
+export MANAGER="${HTDOCS}/manager"
+export FTP_COMPLEMENTARES="200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares"
+export moduloPHPPDV="/Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV"
+export MANAGER_USO=`ls -a ${HTDOCS}/.*anager*.zip.TEMP | sed "s#${HTDOCS}/.##" | sed 's/.TEMP//'`
+export MODULO_USO=`ls -a ${moduloPHPPDV}/.*odulo*.zip.TEMP | sed "s#${moduloPHPPDV}/.##" | sed 's/.TEMP//'`
 
 #Iniciando funcionalidades na tela
 echo -e "${Cor_Preto}"
 echo -e "${Cor_FundoCinza}${Cor_Vermelho}${VERSION_VN}${Cor_Preto}"
-${Z_MOUNT}
 
-if [ -d "${O1S}" ] ; then
-umount "${O1S}"
+
+if [ -d "${PATH_COMUM}" ; then
+echo -e "Validando ${PATH_COMUM} ..."
 else
-mkdir "${O1S}" & chmod 777 "${O1S}"
+mkdir "${PATH_COMUM}"
+chmod 775 "${PATH_COMUM}"
+fi
+
+if [ -d "${PATH_COMUM}/moduloPHPPDV" ] ; then
+echo -e "Validando ${PATH_COMUM}/moduloPHPPDV ..."
+else
+mkdir "${PATH_COMUM}/moduloPHPPDV"
+chmod 775 "${PATH_COMUM}/moduloPHPPDV"
 fi
 
 if [ -d "${moduloPHPPDV}" ] ; then
-umount "${moduloPHPPDV}"
+echo -e "Validando ${moduloPHPPDV} ..."
 else
-mkdir "${moduloPHPPDV}" & chmod 777 "${moduloPHPPDV}" &
-fi
-
-if [ -d "${Scripts_veianew}" ] ; then
-umount "${Scripts_veianew}"
-else
-mkdir "${Scripts_veianew}" & chmod 777 "${Scripts_veianew}" &
-fi
-
-if [ -d "${Path_Comum}" ] ; then
-umount "${Path_Comum}"
-else
-mkdir "${Path_Comum}" & chmod 777 "${Path_Comum}" &
+mkdir "${moduloPHPPDV}"
+chmod 775 "${moduloPHPPDV}"
 fi
 
 
-atualizaSenha(){
-  echo "INFORME SEU USUARIO E SENHA DE ACESSO AO '192.168.0.15'"
-  echo -ne "USUARIO: "
-  read USUARIO_15
-  echo -ne "SENHA: "
-  read SENHA_15
-  echo "USUARIO_15=${USUARIO_15}" >  ${veianewpdvIni}
-  echo "SENHA_15=${SENHA_15}"     >> ${veianewpdvIni}
-}
-montar15(){
-  SERVIDOR1='192.168.0.66/zanthusinterno/Public/qualidade/VERSOES/Manager'
-  COMANDO1="mount -t cifs -s -o username=$USUARIO_15,password=$SENHA_15,rw,sec=ntlm //$SERVIDOR1 $manager"
-  #$COMANDO1
+${Z_MOUNT}
 
-  SERVIDOR2='192.168.0.66/zanthusinterno/Public/qualidade/VERSOES/moduloPHPPDV'
-  COMANDO2="mount -t cifs -s -o username=$USUARIO_15,password=$SENHA_15,rw,sec=ntlm //$SERVIDOR2 $moduloPHPPDV"
-  ${COMANDO2}
+#atualizaSenha(){
+#  echo "INFORME SEU USUARIO E SENHA DE ACESSO AO 'Gerador de versão'"
+#  echo -ne "USUARIO: "
+#  read USUARIO_GV
+#  echo -ne "SENHA: "
+#  read SENHA_GV
+#  echo "USUARIO_GV=${USUARIO_GV}" >  ${ACESSO_GV}
+#  echo "SENHA_GV=${SENHA_GV}"     >> ${ACESSO_GV}
+#}
+#montarGV(){
+#  ###SERVIDOR1='192.168.0.66/zanthusinterno/Public/qualidade/VERSOES/Manager'
+#  ###COMANDO1="mount -t cifs -s -o username=$USUARIO_15,password=$SENHA_15,rw,sec=ntlm //$SERVIDOR1 $manager"
+#  #$COMANDO1
+#
+#  return $?
+#}
+#if [ -e "${ACESSO_GV}" ]
+#then
+# . ${ACESSO_GV}
+#else
+#  atualizaSenha
+#fi
+#montarGV
+#if [ ${?} -ne "0" ]
+#then
+#  OPC=0
+#  while [ ${OPC} -ne 1 -a ${OPC} -ne 2 ]
+#  do
+#    echo -e  "NÃO FOI POSSIVEL ACESSAR O 'Gerador de versão'"
+#    echo     "O QUE VOCE DESEJA FAZER?"
+#    echo     "1. PROSSEGUIR SEM MONTAR (utilizar versoes baixadas anteriormente)"
+#    echo     "2. ATUALIZAR USUARIO E SENHA DE ACESSO AO 'Gerador de versão'"
+#    echo -ne "OPCAO: "
+#    read     OPC
+#    case ${OPC} in
+#      1)
+#        echo "PROSSEGUINDO ..."
+#      ;;
+#      2)
+#        atualizaSenha
+#        montarGV
+#        [ $? -ne 0 ] && OPC=0
+#      ;;
+#      *)
+#        echo "DIGITE UMA OPCAO VALIDA!"
+#      ;;
+#    esac
+#  done
+#fi
 
-  SERVIDOR3='192.168.0.66/zanthusinterno/Public/qualidade/VERSOES/Scripts_veianew'
-  COMANDO3="mount -t cifs -s -o username=$USUARIO_15,password=$SENHA_15,rw,sec=ntlm //$SERVIDOR3 $Scripts_veianew"
+#### USAR ISSO PARA ARMAZENAR O LOG NO 0.97 SEM PRECISAR DE SENHA
+###IP=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
+###echo -e "$HOSTNAME" "   -   " "$IP" "   -   " "$(date +%d/%m/%y__%H:%M:%S)" "   -   " "$VERSION" >> ${Scripts_veianew}/LOGVN/${HOSTNAME}.VNL;
 
-  return $?
-}
-if [ -e "${veianewpdvIni}" ]
-then
- . ${veianewpdvIni}
-else
-  atualizaSenha
-fi
-montar15
-if [ ${?} -ne "0" ]
-then
-  OPC=0
-  while [ ${OPC} -ne 1 -a ${OPC} -ne 2 ]
-  do
-    echo -e  "NÃO FOI POSSIVEL MONTAR O CAMINHO //$SERVIDOR UTILIZANDO O COMANDO ABAIXO\n ($COMANDO)"
-    echo     "O QUE VOCE DESEJA FAZER?"
-    echo     "1. PROSSEGUIR SEM MONTAR (utilizar versoes copiadas anteriormente)"
-    echo     "2. ATUALIZAR USUARIO E SENHA DE ACESSO AO '192.168.0.15'"
-    echo -ne "OPCAO: "
-    read     OPC
-    case ${OPC} in
-      1)
-        echo "PROSSEGUINDO ..."
-      ;;
-      2)
-        atualizaSenha
-        montar15
-        [ $? -ne 0 ] && OPC=0
-      ;;
-      *)
-        echo "DIGITE UMA OPCAO VALIDA!"
-      ;;
-    esac
-  done
-fi
-# rsantos FIM
+echo -e "Carregando..."
+sleep 1
 
-${COMANDO3}
-IP=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'`
-echo -e "$HOSTNAME" "   -   " "$IP" "   -   " "$(date +%d/%m/%y__%H:%M:%S)" "   -   " "$VERSION" >> ${Scripts_veianew}/LOGVN/${HOSTNAME}.VNL;
-sleep 3
-umount ${Scripts_veianew}
+# se existir mais de 45 pacotes manager no htdocs
+#rodar a opção BKP, guardando os mais antigos
+#sleep 0 &
+#else
+#segue o script
+#fi
 
-rsync -uvt /tmp/0.15/*.zip ${moduloPHPPDV}
-
-sleep 1 && umount /tmp/0.15
-
-cd ${moduloPHPPDV}
-echo "mostrando pwd"
-
-for arquivo in *.ZIP
+for padraozip in ${PATH_COMUM}/moduloPHPPDV/*.ZIP
 do
-newname=$(basename ${arquivo} ZIP)zip
-mv ${arquivo} ${newname}
+padraozipnew=$(basename ${padraozip} ZIP)zip
+mv ${padraozip} ${padraozipnew}
 done
 
-cd ${moduloPHPPDV}
+##Baixando *.zip do path_comum para o PDV ##tentar tirar isso
+rsync -uvt ${PATH_COMUM}/moduloPHPPDV/*.zip ${moduloPHPPDV}
 
-chown root.root ${moduloPHPPDV}/*
-chmod 777 ${moduloPHPPDV}/*.zip
+#VALIDAR SE PRECISA MESMO DISSO
+chown root.root ${PATH_COMUM}/moduloPHPPDV/*
+chmod 775 ${PATH_COMUM}/moduloPHPPDV/*.zip
 
-for file in *odulo*.zip
-
+for file in ${PATH_COMUM}/moduloPHPPDV/*odulo*.zip
 do
    if [ ! "$file" = `echo "$file"|sed "s/ /_/g"` ]; then
    mv "$file" `echo "$file"|sed "s/ /_/g"`
    fi
-# echo $file
 done
 
 find . -name "*odulo*.zip"
+rm -rf ${PATH_COMUM}/moduloPHPPDV/copie_um_pacote_modulophppdv_para_o_path_comum_modulophppdv.zip
 
 ListaArquivos(){
 if [ `find . -name '*anager*.zip' | wc -l` -gt 0 ]; then
@@ -159,52 +154,56 @@ echo -e "#     ${Cor_Amarelo} OPÇÕES\t\b\b********************************  PA
 CASE='case $opt in'
 for arq in `ls -1tr *odulo*.zip`
 do
-    echo -e "#\t\b\b\b\b$i    $arq"
+    echo -e "#\t\b\b\b\b$i    ${arq}"
     CASE="${CASE}
-   $i) cd /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/; service zanthus stop; rm -rf *.zip.TEMP; rsync -uv "${moduloPHPPDV}/\"$arq\"" /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/; unzip -oq \"$arq\"; touch \"$arq.TEMP\"; sleep 3; service zanthus start;  echo -e '#\tEXTRACAO CONCLUIDA' ;;"
+   $i) cd ${moduloPHPPDV}/; service zanthus stop; rm -rf *.zip.TEMP; rsync -uv "${PATH_COMUM}/moduloPHPPDV/\"$arq\"" ${moduloPHPPDV}/; unzip -oq \"$arq\"; touch \"$arq.TEMP\"; sleep 3; service zanthus start;  echo -e '#\tEXTRACAO CONCLUIDA' ;;"
     i=$((i+1))
 done
+
 CASE="${CASE}
-   99) rm -rf /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/* ; sleep 1 && veianewpdv ;;
+   99) rm -rf ${moduloPHPPDV}/* ; sleep 1 && veianewpdv ;;
+   98) rm -rf ${moduloPHPPDV}/*odulo*.zip ; sleep 1 && veianewpdv ;;
 
    89) service zanthus start ; sleep 1 && veianewpdv ;;
    88) service zanthus stop ; sleep 1 && veianewpdv ;;
 
    79) echo -e '***** Montando Path_comum*****'; ${Z_MOUNT};  rsync -uv /Zanthus/Zeus/path_comum/so/* /Zanthus/Zeus/lib; if [ "$?" -eq "0" ]; then echo -e '***** Bibliotecas atualizadas com Sucesso LIB *****'; fi;  rsync -uv /Zanthus/Zeus/path_comum/so_co5/* /Zanthus/Zeus/lib_co5 ; if [ "$?" -eq "0" ]; then echo -e '***** Bibliotecas atualizadas com Sucesso LIB_CO5 *****'; fi;  rsync -uv /Zanthus/Zeus/path_comum/so_ubu/* /Zanthus/Zeus/lib_ubu; if [ "$?" -eq "0" ]; then echo -e '***** Bibliotecas atualizadas com Sucesso LIB_UBU *****'; fi;  echo -e '***** Executando ldconfig*****'; ldconfig ; sleep 1 && veianewpdv ;;
    78) dpkg-reconfigure tzdata ; sleep 1 && veianewpdv ;;
-   77) ${Z_MOUNT} ; echo -e 'Aguarde, conectando no ftp.zanthus.com.br';  echo -e 'Atualizando bibliotecas para o PATH_COMUM!!!'; sleep 3 && wget -N -v --tries=2 -P ${Path_Comum}/so/ ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so/* ; wget -N -v --tries=2 -P ${Path_Comum}/so_co5 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_co5/* ; wget -N -v --tries=2 -P ${Path_Comum}/so_r64 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_r64/* ; wget -N -v --tries=2 -P ${Path_Comum}/so_u64 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_u64/* ; wget -N -v --tries=2 -P ${Path_Comum}/so_ubu ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_ubu/* ; sleep 1 && veianewpdv ;;
+   77) ${Z_MOUNT} ; echo -e 'Aguarde, conectando no ftp.zanthus.com.br';  echo -e 'Atualizando bibliotecas para o PATH_COMUM!!!'; sleep 3 && wget -N -v --tries=2 -P ${PATH_COMUM}/so/ ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so/* ; wget -N -v --tries=2 -P ${PATH_COMUM}/so_co5 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_co5/* ; wget -N -v --tries=2 -P ${PATH_COMUM}/so_r64 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_r64/* ; wget -N -v --tries=2 -P ${PATH_COMUM}/so_u64 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_u64/* ; wget -N -v --tries=2 -P ${PATH_COMUM}/so_ubu ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_ubu/* ; sleep 1 && veianewpdv ;;
 
-   59) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_bematec.conf   /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   58) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_dimep.conf     /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   57) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_elgin.conf     /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   56) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_gertec.conf    /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   55) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_kryptus.conf   /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   54) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_mfe_tanca.conf /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   53) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_nitere.conf    /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   52) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_sweda.conf     /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   51) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_tanca.conf     /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
-   50) ${COMANDO2}; sleep 3; cp -rf ${moduloPHPPDV}/sat_lab_urano.conf     /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/sat_lab.conf; sleep 3 ; umount ${moduloPHPPDV}; sleep 1 && veianewpdv ;;
+   59) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_bematec.conf   ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   58) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_dimep.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   57) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_elgin.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   56) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_gertec.conf    ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   55) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_kryptus.conf   ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   54) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_mfe_tanca.conf ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   53) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_nitere.conf    ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   52) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_sweda.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   51) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_tanca.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+   50) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_urano.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${Path_Comum}/moduloPHPPDV; sleep 1 && veianewpdv ;;
 
    01) rm -rf /bin/veianewpdv_OLD ; cp /bin/veianewpdv /bin/veianewpdv_OLD ; ${COMANDO3} ; sleep 3 ; rsync -uv /tmp/0.15/Scripts_veianew/veianewpdv_ATUALIZADO /bin/veianewpdv_ATUALIZADO && umount /tmp/0.15/Scripts_veianew/ ; mv /bin/veianewpdv_ATUALIZADO /bin/veianewpdv ; sleep 1 ; echo -e ""; echo -e ""; echo -e 'Atualizacao do veianewpdv concluida com sucesso!!!'; echo -e ""; echo -e "" ;;
    00) exit ;;
     *) echo 'OPCAO INVALIDA! TENTE NOVAMENTE'; sleep 2; clear; ListaArquivos ;;
 esac"
 
-cd /Zanthus/Zeus/pdvJava/GERAL/SINCRO/WEB/moduloPHPPDV/
+cd ${moduloPHPPDV}/
 
 echo -e ""
 echo -e ""
-echo -e "#\t\033[1;33m\b\b\b\bMODULO EM USO:" *.zip.TEMP
-echo -e "\033[0;0m"
+echo -e "#\t${Cor_Amarelo}\b\b\b\bMODULOPHPPDV EM USO: ${Cor_Vermelho} ${MODULO_USO}"
+echo -e "${Cor_Preto}"
+#echo -e "\t\t***** LIMPEZA *****"
 echo -e "#\t\b\b\b\b99    LIMPAR DIRETORIO MODULOPHPPDV"
-echo -e ""
+echo -e "#\t\b\b\b\b98    LIMPAR PACOTES ZIP DO MODULOPHPPDV"
+#echo -e "\t\t***** MODULOPHPPDV *****"
 echo -e "#\t\b\b\b\b89    START MODULOPHPPDV Service"
 echo -e "#\t\b\b\b\b88    STOP MODULOPHPPDV Service"
-echo -e ""
+#echo -e "\t\t***** ATUALIZAÇOES *****"
 echo -e "#\t\b\b\b\b79    ATUALIZA_BIBLIOTECA"
 echo -e "#\t\b\b\b\b78    AJUSTA TIMEZONE"
 echo -e "#\t\b\b\b\b77    WGet Bibliotecas FTP > Path_comum"
-echo -e ""
+#echo -e "\t\t***** SAT_LAB.CONF *****"
 echo -e "#\t\b\b\b\b59    SAT_LAB.CONF BEMATEC"
 echo -e "#\t\b\b\b\b58    SAT_LAB.CONF DIMEP"
 echo -e "#\t\b\b\b\b57    SAT_LAB.CONF ELGIN"
@@ -219,15 +218,25 @@ echo -e ""
 echo -e "#\t\b\b\b\b01    ATUALIZACAO VEIANEWPDV"
 echo -e "#\t\b\b\b\b00    SAIR"
 echo -e "#\t\b\b\b\b                                                                              ${Cor_FundoCinza} ${Cor_Vermelho} ${VERSION_VN} ${Cor_Preto}"
-echo -ne "#${Cor_VerdeClaro}   INFORME A OPÇÃO DESEJADA: "
+echo -ne "#${Cor_Amarelo}"
+sed ':a;$!N;s/\n//;ta;' ${VEIANEW}/history.vnw
+
+echo -ne "${Cor_Preto}#${Cor_VerdeClaro}   INFORME A OPÇÃO DESEJADA: "
 read -p "" opt
+
+sed -i '1 i'${opt}'  ' ${VEIANEW}/history_all.vnw
+sed -n '1,7p' ${VEIANEW}/history_all.vnw > ${VEIANEW}/history.vnw
+sed -i '1s/^/           HISTORICO DE USO: /' ${VEIANEW}/history.vnw
+
 echo -e "${Cor_Preto}"
 eval "${CASE}"
 
 else
 clear
 echo -e "#\n#\n#\t NÃO HA PACOTES DO MODULOPHPPDV DISPONIVEIS PARA EXTRAÇÃO\n#\n#"
-sleep 2
+echo -e "#\n#\n#\t COPIE UM PACOTE DO MODULOPHPPDV PARA O PATH_COMUM/moduloPHPPDV\n#\n#"
+touch ${PATH_COMUM}/moduloPHPPDV/copie_um_pacote_modulophppdv_para_o_path_comum_modulophppdv.zip
+sleep 5
 clear
 fi
 }
