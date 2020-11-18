@@ -7,7 +7,7 @@
 #Variaveis de Versao e idioma
 export VERSION_VN="v3.0.0"
 #export VERSION_VN="v3.0.1_BETA"
-export LANG=pt_BR
+export LANG=pt_BRR
 
 
 #Variavel de Cores
