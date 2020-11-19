@@ -2,7 +2,7 @@
 ############################################
 ############################################
 #             SCRIPT VEIANEWPDV            #
-#            18/11/2020 - 20323            #
+#            19/11/2020 - 20324            #
 # github.com/MarioAlvesCarvalho/veianewpdv #
 ############################################
 
@@ -35,8 +35,7 @@ export MODULO_USO=`ls -a ${moduloPHPPDV}/.*odulo*.zip.TEMP | sed "s#${moduloPHPP
 echo -e "${Cor_Preto}"
 echo -e "${Cor_FundoCinza}${Cor_Vermelho}${VERSION_VN}${Cor_Preto}"
 
-
-if [ -d "${PATH_COMUM}" ; then
+if [ -d "${PATH_COMUM}" ] ; then
 echo -e "Validando ${PATH_COMUM} ..."
 else
 mkdir "${PATH_COMUM}"
@@ -50,12 +49,34 @@ mkdir "${PATH_COMUM}/moduloPHPPDV"
 chmod 775 "${PATH_COMUM}/moduloPHPPDV"
 fi
 
+if [ -d "${VEIANEW}" ] ; then
+echo -e "Validando ${VEIANEW} ..."
+else
+mkdir "${VEIANEW}"
+chmod 775 "${VEIANEW}"
+fi
+
+if [ -e "${VEIANEW}/history.vnw" ] ; then
+echo -e "Validando ${VEIANEW}/history.vnw ..."
+else
+echo ' ' > "${VEIANEW}/history.vnw"
+chmod 775 "${VEIANEW}/history.vnw"
+fi
+
+if [ -e "${VEIANEW}/history_all.vnw" ] ; then
+echo -e "Validando ${VEIANEW}/history_all.vnw ..."
+else
+echo ' ' > "${VEIANEW}/history_all.vnw"
+chmod 775 "${VEIANEW}/history_all.vnw"
+fi
+
 if [ -d "${moduloPHPPDV}" ] ; then
 echo -e "Validando ${moduloPHPPDV} ..."
 else
 mkdir "${moduloPHPPDV}"
 chmod 775 "${moduloPHPPDV}"
 fi
+
 
 
 ${Z_MOUNT}
