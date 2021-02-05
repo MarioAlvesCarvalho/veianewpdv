@@ -168,7 +168,7 @@ find . -name "*odulo*.zip"
 rm -rf ${PATH_COMUM}/moduloPHPPDV/copie_um_pacote_modulophppdv_para_o_path_comum_modulophppdv.zip
 
 ListaArquivos(){
-if [ `find . -name '*anager*.zip' | wc -l` -gt 0 ]; then
+if [ `find . -name '*odulo*.zip' | wc -l` -gt 0 ]; then
 clear; i=1
 
 echo -e "#     ${Cor_Amarelo} OPÇÕES\t\b\b********************************  PACOTES  MODULOPHPPDV  ********************************${Cor_Preto}"
