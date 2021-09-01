@@ -2,7 +2,7 @@
 ############################################
 ############################################
 #             SCRIPT VEIANEWPDV            #
-#            05/02/2021 - 21036            #
+#            31/08/2021 - 21243            #
 # github.com/MarioAlvesCarvalho/veianewpdv #
 ############################################
 
@@ -29,6 +29,8 @@ export FTP_PUB="ftp://200.201.215.247:2142/pub/"
 export FTP_COMPLEMENTARES="${FTP_PUB}/Zeus_Frente_de_Loja/_Complementares"
 export MANAGER_USO=`ls -a ${HTDOCS}/.*anager*.zip.TEMP | sed "s#${HTDOCS}/.##" | sed 's/.TEMP//'`
 export MODULO_USO=`ls -a ${moduloPHPPDV}/.*odulo*.zip.TEMP | sed "s#${moduloPHPPDV}/.##" | sed 's/.TEMP//'`
+export PDVJAVA="/Zanthus/Zeus/pdvJava"
+export CTSAT="/Zanthus/Zeus/ctsat"
 
 #Iniciando funcionalidades na tela
 echo -e "${Cor_Preto}"
@@ -165,8 +167,6 @@ do
 done
 
 find . -name "*odulo*.zip"
-rm -rf ${PATH_COMUM}/moduloPHPPDV/copie_um_pacote_modulophppdv_para_o_path_comum_modulophppdv.zip
-
 ListaArquivos(){
 if [ `find . -name '*odulo*.zip' | wc -l` -gt 0 ]; then
 clear; i=1
@@ -182,29 +182,32 @@ do
 done
 
 CASE="${CASE}
-   99) rm -rf ${moduloPHPPDV}/* ; sleep 1 && veianewpdv ;;
-   98) rm -rf ${moduloPHPPDV}/*odulo*.zip ; sleep 1 && veianewpdv ;;
+    99) ${VEIANEW}/99.sh ;;
+    98) ${VEIANEW}/98.sh ;;
+    97) ${VEIANEW}/97.sh ;;
+    96) ${VEIANEW}/96.sh ;;
+    95) ${VEIANEW}/95.sh ;;
 
-   89) service zanthus start ; sleep 1 && veianewpdv ;;
-   88) service zanthus stop ; sleep 1 && veianewpdv ;;
+    59) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_bematec.conf   ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    58) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_dimep.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    57) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_elgin.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    56) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_gertec.conf    ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    55) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_kryptus.conf   ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    54) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_mfe_tanca.conf ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    53) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_nitere.conf    ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    52) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_sweda.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    51) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_tanca.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
+    50) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_urano.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${Path_Comum}/moduloPHPPDV; sleep 1 && veianewpdv ;;
 
-   79) echo -e '***** Montando Path_comum*****'; ${Z_MOUNT};  rsync -uv /Zanthus/Zeus/path_comum/so/* /Zanthus/Zeus/lib; if [ "$?" -eq "0" ]; then echo -e '***** Bibliotecas atualizadas com Sucesso LIB *****'; fi;  rsync -uv /Zanthus/Zeus/path_comum/so_co5/* /Zanthus/Zeus/lib_co5 ; if [ "$?" -eq "0" ]; then echo -e '***** Bibliotecas atualizadas com Sucesso LIB_CO5 *****'; fi;  rsync -uv /Zanthus/Zeus/path_comum/so_ubu/* /Zanthus/Zeus/lib_ubu; if [ "$?" -eq "0" ]; then echo -e '***** Bibliotecas atualizadas com Sucesso LIB_UBU *****'; fi;  echo -e '***** Executando ldconfig*****'; ldconfig ; sleep 1 && veianewpdv ;;
-   78) dpkg-reconfigure tzdata ; sleep 1 && veianewpdv ;;
-   77) ${Z_MOUNT} ; echo -e 'Aguarde, conectando no ftp.zanthus.com.br';  echo -e 'Atualizando bibliotecas para o PATH_COMUM!!!'; sleep 3 && wget -N -v --tries=2 -P ${PATH_COMUM}/so/ ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so/* ; wget -N -v --tries=2 -P ${PATH_COMUM}/so_co5 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_co5/* ; wget -N -v --tries=2 -P ${PATH_COMUM}/so_r64 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_r64/* ; wget -N -v --tries=2 -P ${PATH_COMUM}/so_u64 ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_u64/* ; wget -N -v --tries=2 -P ${PATH_COMUM}/so_ubu ftp://200.201.215.247:2142/pub/Zeus_Frente_de_Loja/_Complementares/so_ubu/* ; sleep 1 && veianewpdv ;;
+    49) ${VEIANEW}/49.sh ;;
+    48) ${VEIANEW}/48.sh ;;
+    47) ${VEIANEW}/47.sh ;;
+    06) ${VEIANEW}/06.sh ;;
+    03) ${VEIANEW}/03.sh ;;
 
-   59) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_bematec.conf   ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   58) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_dimep.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   57) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_elgin.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   56) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_gertec.conf    ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   55) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_kryptus.conf   ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   54) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_mfe_tanca.conf ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   53) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_nitere.conf    ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   52) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_sweda.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   51) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_tanca.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${PATH_COMUM}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-   50) ${COMANDO2}; sleep 3; cp -rf ${PATH_COMUM}/moduloPHPPDV/sat_lab_urano.conf     ${moduloPHPPDV}/sat_lab.conf; sleep 3 ; umount ${Path_Comum}/moduloPHPPDV; sleep 1 && veianewpdv ;;
-
-   01) rm -rf /bin/veianewpdv_OLD ; cp /bin/veianewpdv /bin/veianewpdv_OLD ; ${COMANDO3} ; sleep 3 ; rsync -uv /tmp/0.15/Scripts_veianew/veianewpdv_ATUALIZADO /bin/veianewpdv_ATUALIZADO && umount /tmp/0.15/Scripts_veianew/ ; mv /bin/veianewpdv_ATUALIZADO /bin/veianewpdv ; sleep 1 ; echo -e ""; echo -e ""; echo -e 'Atualizacao do veianewpdv concluida com sucesso!!!'; echo -e ""; echo -e "" ;;
-   00) exit ;;
+    01) rm -rf /bin/veianewpdv_OLD ; cp /bin/veianewpdv /bin/veianewpdv_OLD ; ${COMANDO3} ; sleep 3 ; rsync -uv /tmp/0.15/Scripts_veianew/veianewpdv_ATUALIZADO /bin/veianewpdv_ATUALIZADO && umount /tmp/0.15/Scripts_veianew/ ; mv /bin/veianewpdv_ATUALIZADO /bin/veianewpdv ; sleep 1 ; echo -e ""; echo -e ""; echo -e 'Atualizacao do veianewpdv concluida com sucesso!!!'; echo -e ""; echo -e "" ;;
+    00) exit ;;
+    exit) exit ;;
     *) echo 'OPCAO INVALIDA! TENTE NOVAMENTE'; sleep 2; clear; ListaArquivos ;;
 esac"
 
@@ -218,8 +221,8 @@ echo -e "${Cor_Preto}"
 echo -e "#\t\b\b\b\b99    LIMPAR DIRETORIO MODULOPHPPDV"
 echo -e "#\t\b\b\b\b98    LIMPAR PACOTES ZIP DO MODULOPHPPDV"
 #echo -e "\t\t***** MODULOPHPPDV *****"
-echo -e "#\t\b\b\b\b89    START MODULOPHPPDV Service"
-echo -e "#\t\b\b\b\b88    STOP MODULOPHPPDV Service"
+echo -e "#\t\b\b\b\b97    START MODULOPHPPDV Service"
+echo -e "#\t\b\b\b\b96    STOP MODULOPHPPDV Service"
 #echo -e "\t\t***** ATUALIZAÇOES *****"
 echo -e "#\t\b\b\b\b79    ATUALIZA_BIBLIOTECA"
 echo -e "#\t\b\b\b\b78    AJUSTA TIMEZONE"
@@ -235,6 +238,12 @@ echo -e "#\t\b\b\b\b53    SAT_LAB.CONF NITERE"
 echo -e "#\t\b\b\b\b52    SAT_LAB.CONF SWEDA"
 echo -e "#\t\b\b\b\b51    SAT_LAB.CONF TANCA"
 echo -e "#\t\b\b\b\b50    SAT_LAB.CONF URANO"
+echo -e ""
+echo -e "#\t\b\b\b\b49    UTILIZAR SAT DIMEP (0.228)"
+echo -e "#\t\b\b\b\b48    UTILIZAR SAT SWEDA (0.111)"
+echo -e "#\t\b\b\b\b47    UTILIZAR SAT BEMATECH (0.224)"
+echo -e "#\t\b\b\b\b06    BAIXAR BIBLIOTECAS DO FTP / PATH_COMUM"
+echo -e "#\t\b\b\b\b03    BAIXAR BIBLIOTECAS DO PATH_COMUM / PDV"
 echo -e ""
 echo -e "#\t\b\b\b\b01    ATUALIZACAO VEIANEWPDV"
 echo -e "#\t\b\b\b\b00    SAIR"
